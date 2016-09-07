@@ -28,7 +28,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,7 +39,6 @@ public class BrowserActivity extends BaseActivity
     WebView webView;
     String DefaultWebSite = "https://github.com/";
     EditText editText;
-    ImageButton imageButton;
     ImageView advancePage, retreatPage, homePage, bookMark, refreshPage;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -62,7 +60,6 @@ public class BrowserActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         webView = (WebView) findViewById(R.id.webView);
         editText = (EditText) findViewById(R.id.editText);
-        imageButton = (ImageButton) findViewById(R.id.imageButton);
         advancePage = (ImageView) findViewById(R.id.advancePage);
         retreatPage = (ImageView) findViewById(R.id.retreatPage);
         homePage = (ImageView) findViewById(R.id.homePage);
@@ -76,7 +73,6 @@ public class BrowserActivity extends BaseActivity
     }
 
     public void initOnClickListener() {
-        imageButton.setOnClickListener(this);
         advancePage.setOnClickListener(this);
         retreatPage.setOnClickListener(this);
         homePage.setOnClickListener(this);
@@ -202,12 +198,6 @@ public class BrowserActivity extends BaseActivity
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.imageButton:
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                }
-                closeInputWindow();
-                break;
             case R.id.advancePage:
                 if (webView.canGoForward()) {
                     webView.goForward();
@@ -223,11 +213,14 @@ public class BrowserActivity extends BaseActivity
                 }
                 break;
             case R.id.homePage:
+                if(!webView.getUrl().toString().equals(DefaultWebSite))
+                openWebPage(DefaultWebSite);
                 break;
             case R.id.bookMark:
                 startActivityForResult(new Intent(this,BookMarksActivity.class),BOOKMARK_REQUEST);
                 break;
             case R.id.refreshPage:
+                webView.reload();
                 break;
         }
     }

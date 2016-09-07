@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#ff0000</color>
+    <color name="can_upload_paint_color">#ccffffff</color>
+    <color name="title_color">#333333</color>
+    <color name="title_white_color">#ffffff</color>
+    <color name="list_view_text_color">#FFFFFF</color>
+    <color name="list_view_bg">#26232E</color>
+    <color name="listview_divider_color">#434049</color>
+    <color name="divider_color">#80434049</color>
+    <color name="listview_item_sharp">#FEC00F</color>
+    <color name="transparent">#00000000</color>
+</resources>

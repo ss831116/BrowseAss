@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+    productFlavors {
+        LCLUB {
+            manifestPlaceholders = [BROWSEASS_CLUB_CHANNEL_VALUE: "BROWSEASS"]
+        }
+    }
+    defaultConfig {
+        applicationId "com.bernie.browseass"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'Bass'
+            keyPassword 'browse123'
+            storeFile file('Signature/Browsess.jks')
+            storePassword 'browse123'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    buildTypes {
+        debug {
+        }
+        release {
+            signingConfig signingConfigs.releaseConfig
+            def today = new Date().format('yyyyMMdd');
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = "BrowseApp_${defaultConfig.versionName}_PRO_" + today + "_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.facebook.fresco:fresco:0.13.0'
+}

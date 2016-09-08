@@ -14,6 +14,15 @@
         android:inputType="text"
         android:imeOptions="actionGo"
         android:singleLine="true"
-        android:layout_toRightOf="@+id/imageButton" />
+        android:layout_toLeftOf="@+id/collectPage"
+        />
+    <TextView
+        android:id="@+id/collectPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="Collect"/>
+
 
 </RelativeLayout>

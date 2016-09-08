@@ -10,24 +10,25 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.bernie.browseass.R;
-import com.bernie.browseass.bean.BookMarksBean;
 import com.bernie.browseass.listener.BookMarksListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import bernie.greendao.dao.BrowseAssBookMarks;
+
 /**
  * Created by bernie.shi on 2016/9/7.
  */
 
 public class BookMarksAdapter extends BaseAdapter {
-    public List<BookMarksBean> bookMarksBeanList = new ArrayList<>();
+    public List<BrowseAssBookMarks> bookMarksBeanList = new ArrayList<>();
     Context context;
     Activity activity;
     private LayoutInflater mInflater;
     BookMarksListener bookMarksListener;
-    public BookMarksAdapter(Context context, Activity activity, List<BookMarksBean> bookMarksBeanList, BookMarksListener bookMarksListener) {
+    public BookMarksAdapter(Context context, Activity activity, List<BrowseAssBookMarks> bookMarksBeanList, BookMarksListener bookMarksListener) {
         this.context = context;
         this.activity = activity;
         this.bookMarksBeanList = bookMarksBeanList;
@@ -53,7 +54,7 @@ public class BookMarksAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-        final BookMarksBean bookMarksBean = bookMarksBeanList.get(position);
+        final BrowseAssBookMarks bookMarks = bookMarksBeanList.get(position);
         if (null == view) {
             viewHolder = new ViewHolder();
             view = mInflater.inflate(R.layout.book_marks_adapter, viewGroup, false);
@@ -64,14 +65,14 @@ public class BookMarksAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.saveTime.setText(bookMarksBean.getSaveTime());
-        viewHolder.webSite.setText(bookMarksBean.getWebSite());
-        Uri uri = Uri.parse(bookMarksBean.getWebSiteIcon());
+        viewHolder.saveTime.setText(bookMarks.getSaveDate());
+        viewHolder.webSite.setText(bookMarks.getWebSite());
+        Uri uri = Uri.parse(bookMarks.getWebSiteIcon());
         viewHolder.webSiteIcon.setImageURI(uri);
         viewHolder.webSiteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bookMarksListener.chooseBookMark(bookMarksBean.getWebSite());
+                bookMarksListener.chooseBookMark(bookMarks.getWebSite());
             }
         });
 

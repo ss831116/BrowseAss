@@ -1,13 +1,15 @@
 package com.bernie.browseass.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.adapter.BookMarksAdapter;
-import com.bernie.browseass.bean.BookMarksBean;
+import com.bernie.browseass.application.BrowserAssApplication;
 import com.bernie.browseass.listener.BookMarksListener;
 import com.bernie.browseass.widget.XListView;
 
@@ -17,18 +19,29 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import bernie.greendao.dao.BrowseAssBookMarks;
+import bernie.greendao.dao.DaoMaster;
+import bernie.greendao.dao.DaoSession;
+
 public class BookMarksActivity extends BaseActivity implements XListView.IXListViewListener, BookMarksListener {
     private Handler mHandler;
     private XListView xListView;
     private int mPageNum = 1;
     private int resultCode = 1;
     private String REFRESH_LOADMORE = "REFRESH";
-    private List<BookMarksBean> bookMarksBeanList = new ArrayList<>();
+    private List<BrowseAssBookMarks> bookMarksBeanList = new ArrayList<>();
     BookMarksAdapter bookMarksAdapter;
+    DaoMaster daoMaster;
+    DaoSession daoSession;
+    private Cursor cursor;
+    private SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        daoMaster = BrowserAssApplication.instance.getDaoMaster(getApplicationContext());
+        daoSession = BrowserAssApplication.instance.getDaoSession(getApplicationContext());
+        sqLiteDatabase = BrowserAssApplication.instance.getSqLiteDatabase(getApplicationContext());
         setContentView(R.layout.activity_book_marks);
     }
 
@@ -41,21 +54,15 @@ public class BookMarksActivity extends BaseActivity implements XListView.IXListV
         xListView.setAutoLoadEnable(true);
         xListView.setXListViewListener(this);
         xListView.setRefreshTime(getTime());
-        addBookMarksToList("1111111", "https://www.baidu.com/", "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png");
-        addBookMarksToList("2222222", "http://www.youku.com/", "http://static.youku.com/youku/dist/img/find/yk-logo-0412.png");
-        addBookMarksToList("3333333", "https://www.facebook.com/", "https://fbstatic-a.akamaihd.net/rsrc.php/v3/yx/r/pyNVUg5EM0j.png");
         initListView();
     }
 
-    public void addBookMarksToList(String saveTime, String webSite, String webSiteIcon) {
-        BookMarksBean marksBean = new BookMarksBean();
-        marksBean.setSaveTime(saveTime);
-        marksBean.setWebSite(webSite);
-        marksBean.setWebSiteIcon(webSiteIcon);
-        bookMarksBeanList.add(marksBean);
+    public List<BrowseAssBookMarks> getPhotoGallery() {
+        return daoSession.getBrowseAssBookMarksDao().loadAll();
     }
 
     public void initListView() {
+        bookMarksBeanList = getPhotoGallery();
         bookMarksAdapter = new BookMarksAdapter(getApplicationContext(), this, bookMarksBeanList, this);
         xListView.setAdapter(bookMarksAdapter);
     }

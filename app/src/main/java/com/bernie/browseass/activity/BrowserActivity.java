@@ -3,6 +3,8 @@ package com.bernie.browseass.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -29,9 +31,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bernie.browseass.R;
+import com.bernie.browseass.application.BrowserAssApplication;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import bernie.greendao.dao.BrowseAssBookMarks;
+import bernie.greendao.dao.DaoMaster;
+import bernie.greendao.dao.DaoSession;
 
 public class BrowserActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnClickListener, OnKeyListener, OnTouchListener {
@@ -44,11 +56,19 @@ public class BrowserActivity extends BaseActivity
     SharedPreferences.Editor editor;
     String webSite;
     private final int BOOKMARK_REQUEST = 1;
+    TextView collectPage;
+    DaoMaster daoMaster;
+    DaoSession daoSession;
+    private Cursor cursor;
+    private SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
+        daoMaster = BrowserAssApplication.instance.getDaoMaster(getApplicationContext());
+        daoSession = BrowserAssApplication.instance.getDaoSession(getApplicationContext());
+        sqLiteDatabase = BrowserAssApplication.instance.getSqLiteDatabase(getApplicationContext());
         sharedPreferences = getSharedPreferences("webPage", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -65,6 +85,7 @@ public class BrowserActivity extends BaseActivity
         homePage = (ImageView) findViewById(R.id.homePage);
         bookMark = (ImageView) findViewById(R.id.bookMark);
         refreshPage = (ImageView) findViewById(R.id.refreshPage);
+        collectPage = (TextView)findViewById(R.id.collectPage);
         editText.setCursorVisible(false);
         initOnClickListener();
         setEditTextOnClickListener();
@@ -78,6 +99,7 @@ public class BrowserActivity extends BaseActivity
         homePage.setOnClickListener(this);
         bookMark.setOnClickListener(this);
         refreshPage.setOnClickListener(this);
+        collectPage.setOnClickListener(this);
     }
 
     public void setEditTextOnClickListener() {
@@ -222,9 +244,19 @@ public class BrowserActivity extends BaseActivity
             case R.id.refreshPage:
                 webView.reload();
                 break;
+            case R.id.collectPage:
+                BrowseAssBookMarks bookMarks = new BrowseAssBookMarks();
+                bookMarks.setId("1");
+                bookMarks.setWebSite(webView.getUrl());
+                bookMarks.setSaveDate(getTime());
+                bookMarks.setWebSiteIcon("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png");
+                addToPhotoTable(bookMarks);
+                break;
         }
     }
-
+    private String getTime() {
+        return new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new Date());
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data){
         super.onActivityResult( requestCode, resultCode,data);
@@ -273,5 +305,9 @@ public class BrowserActivity extends BaseActivity
                 break;
         }
         return false;
+    }
+    public void addToPhotoTable(BrowseAssBookMarks browseAssBookMarks)
+    {
+        daoSession.getBrowseAssBookMarksDao().insert(browseAssBookMarks);
     }
 }

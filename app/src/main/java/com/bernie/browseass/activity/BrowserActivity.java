@@ -20,6 +20,7 @@ import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.DownloadListener;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -62,7 +63,7 @@ public class BrowserActivity extends BaseActivity
     WebChromeClient.FileChooserParams fileChooserParams;
     ValueCallback<Uri[]> mFilePathCallback;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
-    private static final int CASE_VIDEO = 2;
+    private static final int CASE_IMAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,12 @@ public class BrowserActivity extends BaseActivity
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setUseWideViewPort(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setLoadWithOverviewMode(true);
         webView.setWebViewClient(new WebViewClient() {
                                      public boolean shouldOverrideUrlLoading(WebView view, String url) {
                                          return false;
@@ -154,6 +161,14 @@ public class BrowserActivity extends BaseActivity
                 }
                 BrowserActivity.this.fileChooserParams = fileChooserParams;
                 return true;
+            }
+        });
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String s, String s1, String s2, String s3, long l) {
+                Uri uri = Uri.parse(s);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
         openWebPage(webSite);
@@ -220,13 +235,13 @@ public class BrowserActivity extends BaseActivity
                 addToPhotoTable(bookMarks);
                 break;
             case R.id.camera:
-                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                startActivityForResult(intent, CASE_VIDEO);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CASE_IMAGE);
                 break;
             case R.id.gallery:
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("video/*");
+                i.setType("*/*");
                 startActivityForResult(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
                 break;
             case R.id.bottomBar:

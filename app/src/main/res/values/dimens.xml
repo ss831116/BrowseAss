@@ -14,4 +14,5 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="video_list_divider_height">12dp</dimen>
     <dimen name="listview_font_size">16sp</dimen>
+    <dimen name="bottom_layout_height">80dp</dimen>
 </resources>

@@ -14,4 +14,6 @@
     <color name="divider_color">#80434049</color>
     <color name="listview_item_sharp">#FEC00F</color>
     <color name="transparent">#00000000</color>
+    <color name="background_translucent_color">#8C000000</color>
+    <color name="white">#ffffff</color>
 </resources>

@@ -3,6 +3,7 @@ package com.bernie.browseass.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class BookMarksAdapter extends BaseAdapter {
         viewHolder.webSiteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("shifuqiang","bookMarks.getWebSite() = " + bookMarks.getWebSite());
                 bookMarksListener.chooseBookMark(bookMarks.getWebSite());
             }
         });

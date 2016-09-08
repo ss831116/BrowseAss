@@ -3,13 +3,13 @@ package com.bernie.browseass.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -20,29 +20,28 @@ import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.ClientCertRequest;
-import android.webkit.HttpAuthHandler;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceError;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.application.BrowserAssApplication;
+import com.bernie.browseass.utils.FileUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import bernie.greendao.dao.BrowseAssBookMarks;
-import bernie.greendao.dao.DaoMaster;
 import bernie.greendao.dao.DaoSession;
 
 public class BrowserActivity extends BaseActivity
@@ -57,25 +56,32 @@ public class BrowserActivity extends BaseActivity
     String webSite;
     private final int BOOKMARK_REQUEST = 1;
     TextView collectPage;
-    DaoMaster daoMaster;
     DaoSession daoSession;
-    private Cursor cursor;
-    private SQLiteDatabase sqLiteDatabase;
+    RelativeLayout bottomBar;
+    ImageView camera, gallery;
+    WebChromeClient.FileChooserParams fileChooserParams;
+    ValueCallback<Uri[]> mFilePathCallback;
+    private static final int FILE_CHOOSER_RESULT_CODE = 1;
+    private static final int CASE_VIDEO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
-        daoMaster = BrowserAssApplication.instance.getDaoMaster(getApplicationContext());
         daoSession = BrowserAssApplication.instance.getDaoSession(getApplicationContext());
-        sqLiteDatabase = BrowserAssApplication.instance.getSqLiteDatabase(getApplicationContext());
         sharedPreferences = getSharedPreferences("webPage", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        initAllView();
     }
 
     @Override
     public void initView() {
+
+    }
+
+
+    public void initAllView() {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         webView = (WebView) findViewById(R.id.webView);
@@ -85,8 +91,11 @@ public class BrowserActivity extends BaseActivity
         homePage = (ImageView) findViewById(R.id.homePage);
         bookMark = (ImageView) findViewById(R.id.bookMark);
         refreshPage = (ImageView) findViewById(R.id.refreshPage);
-        collectPage = (TextView)findViewById(R.id.collectPage);
+        collectPage = (TextView) findViewById(R.id.collectPage);
         editText.setCursorVisible(false);
+        bottomBar = (RelativeLayout) findViewById(R.id.bottomBar);
+        camera = (ImageView) findViewById(R.id.camera);
+        gallery = (ImageView) findViewById(R.id.gallery);
         initOnClickListener();
         setEditTextOnClickListener();
         webSite = sharedPreferences.getString("webSite", "").equals("") ? DefaultWebSite : sharedPreferences.getString("webSite", "");
@@ -100,6 +109,9 @@ public class BrowserActivity extends BaseActivity
         bookMark.setOnClickListener(this);
         refreshPage.setOnClickListener(this);
         collectPage.setOnClickListener(this);
+        camera.setOnClickListener(this);
+        gallery.setOnClickListener(this);
+        bottomBar.setOnClickListener(this);
     }
 
     public void setEditTextOnClickListener() {
@@ -113,27 +125,11 @@ public class BrowserActivity extends BaseActivity
         settings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
                                      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                                         view.loadUrl(url);
                                          return false;
-                                     }
-
-                                     @Override
-                                     public void onPageFinished(WebView view, String url) {
-                                         Log.d("onPageFinished", "method 1 =  " + url);
-
                                      }
 
                                      public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                                         Log.d("onPageFinished", "method 2");
                                          return false;
-                                     }
-
-                                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                                         Log.d("onPageFinished", "method 3 = " + url);
-                                     }
-
-                                     public void onLoadResource(WebView view, String url) {
-                                        // Log.d("onPageFinished", "method 4 = " + url);
                                      }
 
                                      public void onPageCommitVisible(WebView view, String url) {
@@ -141,53 +137,25 @@ public class BrowserActivity extends BaseActivity
                                          editor.commit();
                                          editText.setText(url);
                                      }
-
-                                     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                                         Log.d("onPageFinished", "method 6 = " + error);
-                                     }
-
-                                     public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                                         Log.d("onPageFinished", "method 7 = " + errorResponse);
-                                     }
-
-                                     public void onFormResubmission(WebView view, Message dontResend, Message resend) {
-                                         Log.d("onPageFinished", "method 8 = " + dontResend.toString() + ";" + resend.toString());
-                                     }
-
-                                     public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                                         Log.d("onPageFinished", "method 9 = " + url);
-                                     }
-
-                                     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                                         Log.d("onPageFinished", "method 10 = " + error);
-                                     }
-
-                                     public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
-                                         Log.d("onPageFinished", "method 11 = " + request.toString());
-                                     }
-
-                                     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-                                         Log.d("onPageFinished", "method 12 = " + host + ";" + realm);
-                                     }
-
-                                     public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
-                                         Log.d("onPageFinished", "method 13 = " + event);
-                                         return true;
-                                     }
-
-                                     public void onUnhandledKeyEvent(WebView view, KeyEvent event) {
-                                         Log.d("onPageFinished", "method 14 = " + event);
-                                     }
-
-                                     public void onScaleChanged(WebView view, float oldScale, float newScale) {
-                                         Log.d("onPageFinished", "method 15 = " + oldScale + ";" + newScale);
-                                     }
-
-                                     public void onReceivedLoginRequest(WebView view, String realm, String account, String args) {
-                                         Log.d("onPageFinished", "method 16 = " + realm + ";" + account + ";" + args);
-                                     }
                                  }
         );
+        webView.setWebChromeClient(new WebChromeClient() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams) {
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = filePathCallback;
+                if (bottomBar.getVisibility() != View.VISIBLE) {
+                    bottomBar.setVisibility(View.VISIBLE);
+                }
+                BrowserActivity.this.fileChooserParams = fileChooserParams;
+                return true;
+            }
+        });
         openWebPage(webSite);
     }
 
@@ -235,35 +203,88 @@ public class BrowserActivity extends BaseActivity
                 }
                 break;
             case R.id.homePage:
-                if(!webView.getUrl().toString().equals(DefaultWebSite))
-                openWebPage(DefaultWebSite);
+                if (!webView.getUrl().toString().equals(DefaultWebSite))
+                    openWebPage(DefaultWebSite);
                 break;
             case R.id.bookMark:
-                startActivityForResult(new Intent(this,BookMarksActivity.class),BOOKMARK_REQUEST);
+                startActivityForResult(new Intent(this, BookMarksActivity.class), BOOKMARK_REQUEST);
                 break;
             case R.id.refreshPage:
                 webView.reload();
                 break;
             case R.id.collectPage:
                 BrowseAssBookMarks bookMarks = new BrowseAssBookMarks();
-                bookMarks.setId("1");
                 bookMarks.setWebSite(webView.getUrl());
                 bookMarks.setSaveDate(getTime());
-                bookMarks.setWebSiteIcon("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png");
+                bookMarks.setWebSiteIcon("https://www.baidu.com/favicon.ico");
                 addToPhotoTable(bookMarks);
+                break;
+            case R.id.camera:
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                startActivityForResult(intent, CASE_VIDEO);
+                break;
+            case R.id.gallery:
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("video/*");
+                startActivityForResult(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
+                break;
+            case R.id.bottomBar:
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                    mFilePathCallback = null;
+                }
+                if (bottomBar.getVisibility() == View.VISIBLE) {
+                    bottomBar.setVisibility(View.GONE);
+                }
                 break;
         }
     }
+
     private String getTime() {
         return new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new Date());
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode,Intent data){
-        super.onActivityResult( requestCode, resultCode,data);
-        if(data != null && data.getStringExtra("") != null &&!"".equals(data.getStringExtra("")) ){
-            openWebPage(data.getStringExtra("webSite"));
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("onActivityResult", "resultCode = " + resultCode);
+        if (bottomBar.getVisibility() == View.VISIBLE) {
+            bottomBar.setVisibility(View.GONE);
+        }
+        if (resultCode == 2) {
+            if (data != null && data.getStringExtra("webSite") != null && !"".equals(data.getStringExtra("webSite"))) {
+                openWebPage(data.getStringExtra("webSite"));
+            }
+        } else if (resultCode == -1) {
+            if (null == mFilePathCallback) {
+                return;
+            } else {
+                Uri result = data == null ? null : data.getData();
+                String path;
+                if (result != null) {
+                    path = FileUtils.getPath(this, result);
+                    if (TextUtils.isEmpty(path)) {
+                        mFilePathCallback.onReceiveValue(null);
+                    } else {
+                        Uri uri = Uri.fromFile(new File(path));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            mFilePathCallback.onReceiveValue(new Uri[]{uri});
+                        }
+                    }
+                } else {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = null;
+            }
+        } else if (resultCode == 0) {
+            if (mFilePathCallback != null) {
+                mFilePathCallback.onReceiveValue(null);
+                mFilePathCallback = null;
+            }
         }
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
@@ -288,7 +309,7 @@ public class BrowserActivity extends BaseActivity
     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_ENTER:
-                openWebPage(editText.getText().toString());
+                openWebPage("https://" + editText.getText().toString() + "/");
                 closeInputWindow();
                 break;
         }
@@ -306,8 +327,8 @@ public class BrowserActivity extends BaseActivity
         }
         return false;
     }
-    public void addToPhotoTable(BrowseAssBookMarks browseAssBookMarks)
-    {
+
+    public void addToPhotoTable(BrowseAssBookMarks browseAssBookMarks) {
         daoSession.getBrowseAssBookMarksDao().insert(browseAssBookMarks);
     }
 }

@@ -22,7 +22,7 @@ public class BrowseAssDaoGenerator {
      */
     private static void addNote(Schema schema) {
         Entity note = schema.addEntity("BrowseAssBookMarks");
-        note.addStringProperty("id").primaryKey().index();
+        //note.addStringProperty("id").primaryKey().index();
         note.addStringProperty("webSite");
         note.addStringProperty("webSiteIcon");
         note.addStringProperty("saveDate");

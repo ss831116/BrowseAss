@@ -27,7 +27,7 @@ public class BookMarksActivity extends BaseActivity implements XListView.IXListV
     private Handler mHandler;
     private XListView xListView;
     private int mPageNum = 1;
-    private int resultCode = 1;
+    private int resultCode = 2;
     private String REFRESH_LOADMORE = "REFRESH";
     private List<BrowseAssBookMarks> bookMarksBeanList = new ArrayList<>();
     BookMarksAdapter bookMarksAdapter;

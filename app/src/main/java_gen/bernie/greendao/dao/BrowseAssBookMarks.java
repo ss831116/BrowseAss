@@ -8,10 +8,6 @@ import org.greenrobot.greendao.annotation.*;
  */
 @Entity
 public class BrowseAssBookMarks {
-
-    @Id
-    @Index
-    private String id;
     private String webSite;
     private String webSiteIcon;
     private String saveDate;
@@ -20,24 +16,11 @@ public class BrowseAssBookMarks {
     public BrowseAssBookMarks() {
     }
 
-    public BrowseAssBookMarks(String id) {
-        this.id = id;
-    }
-
     @Generated
-    public BrowseAssBookMarks(String id, String webSite, String webSiteIcon, String saveDate) {
-        this.id = id;
+    public BrowseAssBookMarks(String webSite, String webSiteIcon, String saveDate) {
         this.webSite = webSite;
         this.webSiteIcon = webSiteIcon;
         this.saveDate = saveDate;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getWebSite() {

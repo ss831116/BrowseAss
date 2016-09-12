@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_translucent_color"
-    android:visibility="visible">
+    android:visibility="gone">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_layout_height"

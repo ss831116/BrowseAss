@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.bernie.browseass.R;
 import com.bernie.browseass.application.BrowserAssApplication;
 import com.bernie.browseass.utils.FileUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -64,6 +65,8 @@ public class BrowserActivity extends BaseActivity
     ValueCallback<Uri[]> mFilePathCallback;
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
     private static final int CASE_IMAGE = 2;
+    private static final int LOG_IN = 3;
+    SimpleDraweeView userHeadIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class BrowserActivity extends BaseActivity
 
     public void initAllView() {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        userHeadIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.userHeadIcon);
         navigationView.setNavigationItemSelectedListener(this);
         webView = (WebView) findViewById(R.id.webView);
         editText = (EditText) findViewById(R.id.editText);
@@ -113,6 +117,7 @@ public class BrowserActivity extends BaseActivity
         camera.setOnClickListener(this);
         gallery.setOnClickListener(this);
         bottomBar.setOnClickListener(this);
+        userHeadIcon.setOnClickListener(this);
     }
 
     public void setEditTextOnClickListener() {
@@ -253,6 +258,10 @@ public class BrowserActivity extends BaseActivity
                     bottomBar.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.userHeadIcon:
+                startActivityForResult(new Intent(this, LoginActivity.class), LOG_IN);
+                //startActivity(new Intent(this, LoginActivity.class));
+                break;
         }
     }
 
@@ -297,6 +306,13 @@ public class BrowserActivity extends BaseActivity
                 mFilePathCallback.onReceiveValue(null);
                 mFilePathCallback = null;
             }
+        } else if (resultCode == 4) {
+            if (mFilePathCallback != null) {
+                mFilePathCallback.onReceiveValue(null);
+                mFilePathCallback = null;
+            }
+            Uri uri = Uri.parse(data.getStringExtra("headIcon"));
+            userHeadIcon.setImageURI(uri);
         }
     }
 

@@ -23,6 +23,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textColor="@drawable/open_web_click"
+        android:layout_marginRight="10dp"
         android:text="Collect"/>
 
 

@@ -4,18 +4,21 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="horizontal">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1">
+
         <ImageView
             android:id="@+id/retreatPage"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:scaleType="fitXY"
-            android:background="@drawable/back_image" />
+            android:background="@drawable/back_image"
+            android:scaleType="fitXY" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -25,46 +28,50 @@
             android:id="@+id/advancePage"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:scaleType="fitXY"
             android:layout_centerInParent="true"
-            android:background="@drawable/advance_image" />
+            android:background="@drawable/advance_image"
+            android:scaleType="fitXY" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1">
-    <ImageView
-        android:id="@+id/homePage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="fitXY"
-        android:layout_centerInParent="true"
-        android:background="@drawable/home"
-        />
+
+        <ImageView
+            android:id="@+id/homePage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/home_click" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1">
-    <ImageView
-        android:id="@+id/bookMark"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="fitXY"
-        android:layout_centerInParent="true"
-        android:background="@drawable/book_mark" />
+
+        <ImageView
+            android:id="@+id/bookMark"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/book_mark"
+            android:scaleType="fitXY" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1">
-    <ImageView
-        android:id="@+id/refreshPage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"
-        android:scaleType="fitXY"
-        android:background="@drawable/refresh" />
+
+        <ImageView
+            android:id="@+id/refreshPage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/refresh"
+            android:scaleType="fitXY" />
     </RelativeLayout>
 </LinearLayout>

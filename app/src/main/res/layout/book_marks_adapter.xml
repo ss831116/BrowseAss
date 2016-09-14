@@ -10,7 +10,14 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         fresco:placeholderImage="@drawable/home" />
-
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_above="@+id/webSite"
+        android:layout_toRightOf="@+id/webSiteIcon" />
     <TextView
         android:id="@+id/webSite"
         android:layout_width="wrap_content"

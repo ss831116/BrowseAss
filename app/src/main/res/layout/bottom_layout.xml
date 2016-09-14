@@ -15,7 +15,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/back_image"
+            android:background="@drawable/pre_button"
             android:scaleType="fitXY" />
     </RelativeLayout>
 
@@ -29,7 +29,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/advance_image"
+            android:background="@drawable/next_button"
             android:scaleType="fitXY" />
     </RelativeLayout>
 
@@ -44,7 +44,7 @@
             android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:src="@drawable/home_click" />
+            android:src="@drawable/home_button" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,7 +57,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/book_mark"
+            android:src="@drawable/tools_button"
             android:scaleType="fitXY" />
     </RelativeLayout>
 
@@ -67,7 +67,7 @@
         android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/refreshPage"
+            android:id="@+id/more"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"

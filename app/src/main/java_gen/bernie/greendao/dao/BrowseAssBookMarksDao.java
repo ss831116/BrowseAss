@@ -13,7 +13,7 @@ import org.greenrobot.greendao.database.DatabaseStatement;
 /** 
  * DAO for table "BROWSE_ASS_BOOK_MARKS".
 */
-public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Void> {
+public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long> {
 
     public static final String TABLENAME = "BROWSE_ASS_BOOK_MARKS";
 
@@ -22,9 +22,11 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Void>
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property WebSite = new Property(0, String.class, "webSite", false, "WEB_SITE");
-        public final static Property WebSiteIcon = new Property(1, String.class, "webSiteIcon", false, "WEB_SITE_ICON");
-        public final static Property SaveDate = new Property(2, String.class, "saveDate", false, "SAVE_DATE");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property WebSite = new Property(1, String.class, "webSite", false, "WEB_SITE");
+        public final static Property WebSiteIcon = new Property(2, String.class, "webSiteIcon", false, "WEB_SITE_ICON");
+        public final static Property SaveDate = new Property(3, String.class, "saveDate", false, "SAVE_DATE");
+        public final static Property Title = new Property(4, String.class, "title", false, "TITLE");
     }
 
 
@@ -40,9 +42,11 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Void>
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BROWSE_ASS_BOOK_MARKS\" (" + //
-                "\"WEB_SITE\" TEXT," + // 0: webSite
-                "\"WEB_SITE_ICON\" TEXT," + // 1: webSiteIcon
-                "\"SAVE_DATE\" TEXT);"); // 2: saveDate
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"WEB_SITE\" TEXT," + // 1: webSite
+                "\"WEB_SITE_ICON\" TEXT," + // 2: webSiteIcon
+                "\"SAVE_DATE\" TEXT," + // 3: saveDate
+                "\"TITLE\" TEXT);"); // 4: title
     }
 
     /** Drops the underlying database table. */
@@ -55,19 +59,29 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Void>
     protected final void bindValues(DatabaseStatement stmt, BrowseAssBookMarks entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String webSite = entity.getWebSite();
         if (webSite != null) {
-            stmt.bindString(1, webSite);
+            stmt.bindString(2, webSite);
         }
  
         String webSiteIcon = entity.getWebSiteIcon();
         if (webSiteIcon != null) {
-            stmt.bindString(2, webSiteIcon);
+            stmt.bindString(3, webSiteIcon);
         }
  
         String saveDate = entity.getSaveDate();
         if (saveDate != null) {
-            stmt.bindString(3, saveDate);
+            stmt.bindString(4, saveDate);
+        }
+ 
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(5, title);
         }
     }
 
@@ -75,59 +89,76 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Void>
     protected final void bindValues(SQLiteStatement stmt, BrowseAssBookMarks entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String webSite = entity.getWebSite();
         if (webSite != null) {
-            stmt.bindString(1, webSite);
+            stmt.bindString(2, webSite);
         }
  
         String webSiteIcon = entity.getWebSiteIcon();
         if (webSiteIcon != null) {
-            stmt.bindString(2, webSiteIcon);
+            stmt.bindString(3, webSiteIcon);
         }
  
         String saveDate = entity.getSaveDate();
         if (saveDate != null) {
-            stmt.bindString(3, saveDate);
+            stmt.bindString(4, saveDate);
+        }
+ 
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(5, title);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public BrowseAssBookMarks readEntity(Cursor cursor, int offset) {
         BrowseAssBookMarks entity = new BrowseAssBookMarks( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // webSite
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // webSiteIcon
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // saveDate
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // webSite
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // webSiteIcon
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // saveDate
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // title
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, BrowseAssBookMarks entity, int offset) {
-        entity.setWebSite(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setWebSiteIcon(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setSaveDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setWebSite(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setWebSiteIcon(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setSaveDate(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTitle(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(BrowseAssBookMarks entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(BrowseAssBookMarks entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(BrowseAssBookMarks entity) {
-        return null;
+    public Long getKey(BrowseAssBookMarks entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(BrowseAssBookMarks entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

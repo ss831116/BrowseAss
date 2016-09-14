@@ -62,12 +62,14 @@ public class BookMarksAdapter extends BaseAdapter {
             viewHolder.webSiteIcon =(SimpleDraweeView) view.findViewById(R.id.webSiteIcon);
             viewHolder.saveTime =(TextView) view.findViewById(R.id.saveTime);
             viewHolder.webSite =(TextView) view.findViewById(R.id.webSite);
+            viewHolder.title =(TextView) view.findViewById(R.id.title);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.saveTime.setText(bookMarks.getSaveDate());
         viewHolder.webSite.setText(bookMarks.getWebSite());
+        viewHolder.title.setText(bookMarks.getTitle());
         Uri uri = Uri.parse(bookMarks.getWebSiteIcon());
         viewHolder.webSiteIcon.setImageURI(uri);
         viewHolder.webSiteIcon.setOnClickListener(new View.OnClickListener() {
@@ -84,5 +86,6 @@ public class BookMarksAdapter extends BaseAdapter {
         SimpleDraweeView webSiteIcon;
         TextView webSite;
         TextView saveTime;
+        TextView title;
     }
 }

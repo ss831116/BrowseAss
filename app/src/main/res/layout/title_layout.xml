@@ -2,29 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/title_layout_height"
-    android:background="@color/colorPrimary">
+    android:background="@color/white_f7">
 
     <EditText
         android:id="@+id/editText"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:focusableInTouchMode="true"
-        android:inputType="text"
-        android:imeOptions="actionGo"
-        android:singleLine="true"
         android:layout_toLeftOf="@+id/collectPage"
-        />
+        android:background="@drawable/edit_shape"
+        android:drawableLeft="@drawable/refresh"
+        android:focusableInTouchMode="true"
+        android:imeOptions="actionGo"
+        android:inputType="text"
+        android:paddingLeft="5dp" />
+
     <TextView
         android:id="@+id/collectPage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:textColor="@drawable/open_web_click"
+        android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:text="Collect"/>
+        android:gravity="center"
+        android:text="@string/collect_web_page"
+        android:textColor="@drawable/open_web_click" />
 
+    <ImageView
+        android:id="@+id/freshImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent" />
 
 </RelativeLayout>

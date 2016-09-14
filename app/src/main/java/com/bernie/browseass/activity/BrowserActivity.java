@@ -38,6 +38,8 @@ import com.bernie.browseass.application.BrowserAssApplication;
 import com.bernie.browseass.utils.FileUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +47,8 @@ import java.util.Locale;
 
 import bernie.greendao.dao.BrowseAssBookMarks;
 import bernie.greendao.dao.DaoSession;
+import bernie.greendao.dao.HistoryWebPage;
+import bernie.greendao.dao.HistoryWebPageDao;
 
 public class BrowserActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnClickListener, OnKeyListener, OnTouchListener {
@@ -52,7 +56,7 @@ public class BrowserActivity extends BaseActivity
     WebView webView;
     String DefaultWebSite = "https://github.com/";
     EditText editText;
-    ImageView advancePage, retreatPage, homePage, bookMark, refreshPage;
+    ImageView advancePage, retreatPage, homePage, bookMark, more,freshImage;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String webSite;
@@ -95,7 +99,8 @@ public class BrowserActivity extends BaseActivity
         retreatPage = (ImageView) findViewById(R.id.retreatPage);
         homePage = (ImageView) findViewById(R.id.homePage);
         bookMark = (ImageView) findViewById(R.id.bookMark);
-        refreshPage = (ImageView) findViewById(R.id.refreshPage);
+        freshImage  = (ImageView) findViewById(R.id.freshImage);
+        more = (ImageView) findViewById(R.id.more);
         collectPage = (TextView) findViewById(R.id.collectPage);
         editText.setCursorVisible(false);
         bottomBar = (RelativeLayout) findViewById(R.id.bottomBar);
@@ -112,12 +117,13 @@ public class BrowserActivity extends BaseActivity
         retreatPage.setOnClickListener(this);
         homePage.setOnClickListener(this);
         bookMark.setOnClickListener(this);
-        refreshPage.setOnClickListener(this);
+        more.setOnClickListener(this);
         collectPage.setOnClickListener(this);
         camera.setOnClickListener(this);
         gallery.setOnClickListener(this);
         bottomBar.setOnClickListener(this);
         userHeadIcon.setOnClickListener(this);
+        freshImage.setOnClickListener(this);
     }
 
     public void setEditTextOnClickListener() {
@@ -148,6 +154,32 @@ public class BrowserActivity extends BaseActivity
                                          editor.putString("webSite", url);
                                          editor.commit();
                                          editText.setText(url);
+                                         if (webView.canGoBack()) {
+                                             retreatPage.setEnabled(true);
+                                         } else {
+                                             retreatPage.setEnabled(false);
+                                         }
+                                         if (webView.canGoForward()) {
+                                             advancePage.setEnabled(true);
+                                         } else {
+                                             advancePage.setEnabled(false);
+                                         }
+                                         long id =isHaveHistory(view.getUrl());
+                                         Log.d("shifuqiang","id = "+ id);
+                                         if (id == 0) {
+                                             HistoryWebPage historyWebPage = new HistoryWebPage();
+                                             historyWebPage.setScanTime(getTime());
+                                             historyWebPage.setWebTitle(view.getTitle());
+                                             historyWebPage.setWebPageSite(view.getUrl());
+                                             addWebPageToHistory(historyWebPage);
+                                         }else{
+                                             HistoryWebPage historyWebPage = new HistoryWebPage();
+                                             historyWebPage.setId(id);
+                                             historyWebPage.setScanTime(getTime());
+                                             historyWebPage.setWebTitle(view.getTitle());
+                                             historyWebPage.setWebPageSite(view.getUrl());
+                                             updateHistoryRecord(historyWebPage);
+                                         }
                                      }
                                  }
         );
@@ -227,9 +259,14 @@ public class BrowserActivity extends BaseActivity
                     openWebPage(DefaultWebSite);
                 break;
             case R.id.bookMark:
-                startActivityForResult(new Intent(this, BookMarksActivity.class), BOOKMARK_REQUEST);
+               // startActivityForResult(new Intent(this, BookMarksActivity.class), BOOKMARK_REQUEST);
+                startActivityForResult(new Intent(this, BookFragmentActivity.class), BOOKMARK_REQUEST);
                 break;
-            case R.id.refreshPage:
+            case R.id.more:
+                //startActivity(new Intent(this, BookFragmentActivity.class));
+                //webView.reload();
+                break;
+            case R.id.freshImage:
                 webView.reload();
                 break;
             case R.id.collectPage:
@@ -237,6 +274,7 @@ public class BrowserActivity extends BaseActivity
                 bookMarks.setWebSite(webView.getUrl());
                 bookMarks.setSaveDate(getTime());
                 bookMarks.setWebSiteIcon("https://www.baidu.com/favicon.ico");
+                bookMarks.setTitle(webView.getTitle());
                 addToPhotoTable(bookMarks);
                 break;
             case R.id.camera:
@@ -272,7 +310,6 @@ public class BrowserActivity extends BaseActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("onActivityResult", "resultCode = " + resultCode);
         if (bottomBar.getVisibility() == View.VISIBLE) {
             bottomBar.setVisibility(View.GONE);
         }
@@ -362,4 +399,23 @@ public class BrowserActivity extends BaseActivity
     public void addToPhotoTable(BrowseAssBookMarks browseAssBookMarks) {
         daoSession.getBrowseAssBookMarksDao().insert(browseAssBookMarks);
     }
+
+    public void addWebPageToHistory(HistoryWebPage historyWebPage) {
+        daoSession.getHistoryWebPageDao().insert(historyWebPage);
+    }
+
+    public long isHaveHistory(String webSite) {
+        long id = 0;
+        QueryBuilder<HistoryWebPage> qb = daoSession.getHistoryWebPageDao().queryBuilder();
+        qb.where(HistoryWebPageDao.Properties.WebPageSite.eq(webSite));
+        for(int i =0;i<qb.list().size();i++){
+            id = qb.list().get(i).getId();
+        }
+        return id;
+    }
+
+    public void updateHistoryRecord(HistoryWebPage historyWebPage) {
+        daoSession.getHistoryWebPageDao().update(historyWebPage);
+    }
+
 }

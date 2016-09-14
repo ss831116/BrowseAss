@@ -22,11 +22,13 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         BrowseAssBookMarksDao.createTable(db, ifNotExists);
+        HistoryWebPageDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         BrowseAssBookMarksDao.dropTable(db, ifExists);
+        HistoryWebPageDao.dropTable(db, ifExists);
     }
 
     /**
@@ -46,6 +48,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(BrowseAssBookMarksDao.class);
+        registerDaoClass(HistoryWebPageDao.class);
     }
 
     public DaoSession newSession() {

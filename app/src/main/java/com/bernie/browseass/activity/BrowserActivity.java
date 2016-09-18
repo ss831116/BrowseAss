@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebIconDatabase;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -35,6 +38,7 @@ import android.widget.Toast;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.application.BrowserAssApplication;
+import com.bernie.browseass.utils.BitmapHelper;
 import com.bernie.browseass.utils.FileUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -46,6 +50,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import bernie.greendao.dao.BrowseAssBookMarks;
+import bernie.greendao.dao.BrowseAssBookMarksDao;
 import bernie.greendao.dao.DaoSession;
 import bernie.greendao.dao.HistoryWebPage;
 import bernie.greendao.dao.HistoryWebPageDao;
@@ -56,7 +61,7 @@ public class BrowserActivity extends BaseActivity
     WebView webView;
     String DefaultWebSite = "https://github.com/";
     EditText editText;
-    ImageView advancePage, retreatPage, homePage, bookMark, more,freshImage;
+    ImageView advancePage, retreatPage, homePage, bookMark, more, freshImage;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String webSite;
@@ -71,6 +76,8 @@ public class BrowserActivity extends BaseActivity
     private static final int CASE_IMAGE = 2;
     private static final int LOG_IN = 3;
     SimpleDraweeView userHeadIcon;
+    DrawerLayout drawer;
+    TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,7 @@ public class BrowserActivity extends BaseActivity
         sharedPreferences = getSharedPreferences("webPage", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
         initAllView();
     }
 
@@ -88,10 +96,18 @@ public class BrowserActivity extends BaseActivity
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.browser, menu);
+        return true;
+    }
 
     public void initAllView() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         userHeadIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.userHeadIcon);
+        userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userName);
         navigationView.setNavigationItemSelectedListener(this);
         webView = (WebView) findViewById(R.id.webView);
         editText = (EditText) findViewById(R.id.editText);
@@ -99,7 +115,7 @@ public class BrowserActivity extends BaseActivity
         retreatPage = (ImageView) findViewById(R.id.retreatPage);
         homePage = (ImageView) findViewById(R.id.homePage);
         bookMark = (ImageView) findViewById(R.id.bookMark);
-        freshImage  = (ImageView) findViewById(R.id.freshImage);
+        freshImage = (ImageView) findViewById(R.id.freshImage);
         more = (ImageView) findViewById(R.id.more);
         collectPage = (TextView) findViewById(R.id.collectPage);
         editText.setCursorVisible(false);
@@ -110,6 +126,13 @@ public class BrowserActivity extends BaseActivity
         setEditTextOnClickListener();
         webSite = sharedPreferences.getString("webSite", "").equals("") ? DefaultWebSite : sharedPreferences.getString("webSite", "");
         webViewLoadHtml(webSite);
+        initUserView();
+    }
+
+    public void initUserView() {
+        Uri uri = Uri.parse(sharedPreferences.getString("headIcon",""));
+        userHeadIcon.setImageURI(uri);
+        userName.setText(sharedPreferences.getString("nickname",""));
     }
 
     public void initOnClickListener() {
@@ -164,15 +187,14 @@ public class BrowserActivity extends BaseActivity
                                          } else {
                                              advancePage.setEnabled(false);
                                          }
-                                         long id =isHaveHistory(view.getUrl());
-                                         Log.d("shifuqiang","id = "+ id);
+                                         long id = isHaveHistory(view.getUrl());
                                          if (id == 0) {
                                              HistoryWebPage historyWebPage = new HistoryWebPage();
                                              historyWebPage.setScanTime(getTime());
                                              historyWebPage.setWebTitle(view.getTitle());
                                              historyWebPage.setWebPageSite(view.getUrl());
                                              addWebPageToHistory(historyWebPage);
-                                         }else{
+                                         } else {
                                              HistoryWebPage historyWebPage = new HistoryWebPage();
                                              historyWebPage.setId(id);
                                              historyWebPage.setScanTime(getTime());
@@ -237,6 +259,7 @@ public class BrowserActivity extends BaseActivity
         return true;
     }
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -259,23 +282,25 @@ public class BrowserActivity extends BaseActivity
                     openWebPage(DefaultWebSite);
                 break;
             case R.id.bookMark:
-               // startActivityForResult(new Intent(this, BookMarksActivity.class), BOOKMARK_REQUEST);
                 startActivityForResult(new Intent(this, BookFragmentActivity.class), BOOKMARK_REQUEST);
                 break;
             case R.id.more:
-                //startActivity(new Intent(this, BookFragmentActivity.class));
-                //webView.reload();
+                drawer.openDrawer(GravityCompat.START);
                 break;
             case R.id.freshImage:
                 webView.reload();
                 break;
             case R.id.collectPage:
-                BrowseAssBookMarks bookMarks = new BrowseAssBookMarks();
-                bookMarks.setWebSite(webView.getUrl());
-                bookMarks.setSaveDate(getTime());
-                bookMarks.setWebSiteIcon("https://www.baidu.com/favicon.ico");
-                bookMarks.setTitle(webView.getTitle());
-                addToPhotoTable(bookMarks);
+                if (webView.getFavicon() == null) {
+                    Toast.makeText(getApplicationContext(), "icon = null", Toast.LENGTH_SHORT).show();
+                } else {
+                    BrowseAssBookMarks bookMarks = new BrowseAssBookMarks();
+                    bookMarks.setWebSite(webView.getUrl());
+                    bookMarks.setSaveDate(getTime());
+                    bookMarks.setWebSiteIcon(BitmapHelper.bitmapToByte(webView.getFavicon()));
+                    bookMarks.setTitle(webView.getTitle());
+                    addToPhotoTable(bookMarks);
+                }
                 break;
             case R.id.camera:
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -298,7 +323,6 @@ public class BrowserActivity extends BaseActivity
                 break;
             case R.id.userHeadIcon:
                 startActivityForResult(new Intent(this, LoginActivity.class), LOG_IN);
-                //startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
     }
@@ -349,7 +373,12 @@ public class BrowserActivity extends BaseActivity
                 mFilePathCallback = null;
             }
             Uri uri = Uri.parse(data.getStringExtra("headIcon"));
+            //shifuqiang
+            editor.putString("headIcon", data.getStringExtra("headIcon"));
+            editor.putString("nickname", data.getStringExtra("nickname"));
+            editor.commit();
             userHeadIcon.setImageURI(uri);
+            userName.setText(data.getStringExtra("nickname"));
         }
     }
 
@@ -397,18 +426,33 @@ public class BrowserActivity extends BaseActivity
     }
 
     public void addToPhotoTable(BrowseAssBookMarks browseAssBookMarks) {
-        daoSession.getBrowseAssBookMarksDao().insert(browseAssBookMarks);
+        long id = isSaved(browseAssBookMarks.getWebSite());
+        if (id == 0) {
+            daoSession.getBrowseAssBookMarksDao().insert(browseAssBookMarks);
+        } else {
+            Toast.makeText(getApplicationContext(), "have save", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void addWebPageToHistory(HistoryWebPage historyWebPage) {
         daoSession.getHistoryWebPageDao().insert(historyWebPage);
     }
 
+    public long isSaved(String webSite) {
+        long id = 0;
+        QueryBuilder<BrowseAssBookMarks> qb = daoSession.getBrowseAssBookMarksDao().queryBuilder();
+        qb.where(BrowseAssBookMarksDao.Properties.WebSite.eq(webSite));
+        for (int i = 0; i < qb.list().size(); i++) {
+            id = qb.list().get(i).getId();
+        }
+        return id;
+    }
+
     public long isHaveHistory(String webSite) {
         long id = 0;
         QueryBuilder<HistoryWebPage> qb = daoSession.getHistoryWebPageDao().queryBuilder();
         qb.where(HistoryWebPageDao.Properties.WebPageSite.eq(webSite));
-        for(int i =0;i<qb.list().size();i++){
+        for (int i = 0; i < qb.list().size(); i++) {
             id = qb.list().get(i).getId();
         }
         return id;

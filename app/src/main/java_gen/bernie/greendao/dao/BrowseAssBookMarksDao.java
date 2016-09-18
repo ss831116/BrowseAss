@@ -24,7 +24,7 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property WebSite = new Property(1, String.class, "webSite", false, "WEB_SITE");
-        public final static Property WebSiteIcon = new Property(2, String.class, "webSiteIcon", false, "WEB_SITE_ICON");
+        public final static Property WebSiteIcon = new Property(2, byte[].class, "webSiteIcon", false, "WEB_SITE_ICON");
         public final static Property SaveDate = new Property(3, String.class, "saveDate", false, "SAVE_DATE");
         public final static Property Title = new Property(4, String.class, "title", false, "TITLE");
     }
@@ -44,7 +44,7 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
         db.execSQL("CREATE TABLE " + constraint + "\"BROWSE_ASS_BOOK_MARKS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"WEB_SITE\" TEXT," + // 1: webSite
-                "\"WEB_SITE_ICON\" TEXT," + // 2: webSiteIcon
+                "\"WEB_SITE_ICON\" BLOB," + // 2: webSiteIcon
                 "\"SAVE_DATE\" TEXT," + // 3: saveDate
                 "\"TITLE\" TEXT);"); // 4: title
     }
@@ -69,9 +69,9 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
             stmt.bindString(2, webSite);
         }
  
-        String webSiteIcon = entity.getWebSiteIcon();
+        byte[] webSiteIcon = entity.getWebSiteIcon();
         if (webSiteIcon != null) {
-            stmt.bindString(3, webSiteIcon);
+            stmt.bindBlob(3, webSiteIcon);
         }
  
         String saveDate = entity.getSaveDate();
@@ -99,9 +99,9 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
             stmt.bindString(2, webSite);
         }
  
-        String webSiteIcon = entity.getWebSiteIcon();
+        byte[] webSiteIcon = entity.getWebSiteIcon();
         if (webSiteIcon != null) {
-            stmt.bindString(3, webSiteIcon);
+            stmt.bindBlob(3, webSiteIcon);
         }
  
         String saveDate = entity.getSaveDate();
@@ -125,7 +125,7 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
         BrowseAssBookMarks entity = new BrowseAssBookMarks( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // webSite
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // webSiteIcon
+            cursor.isNull(offset + 2) ? null : cursor.getBlob(offset + 2), // webSiteIcon
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // saveDate
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // title
         );
@@ -136,7 +136,7 @@ public class BrowseAssBookMarksDao extends AbstractDao<BrowseAssBookMarks, Long>
     public void readEntity(Cursor cursor, BrowseAssBookMarks entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setWebSite(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setWebSiteIcon(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setWebSiteIcon(cursor.isNull(offset + 2) ? null : cursor.getBlob(offset + 2));
         entity.setSaveDate(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setTitle(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }

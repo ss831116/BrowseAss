@@ -12,7 +12,7 @@ public class BrowseAssBookMarks {
     @Id
     private Long id;
     private String webSite;
-    private String webSiteIcon;
+    private byte[] webSiteIcon;
     private String saveDate;
     private String title;
 
@@ -25,7 +25,7 @@ public class BrowseAssBookMarks {
     }
 
     @Generated
-    public BrowseAssBookMarks(Long id, String webSite, String webSiteIcon, String saveDate, String title) {
+    public BrowseAssBookMarks(Long id, String webSite, byte[] webSiteIcon, String saveDate, String title) {
         this.id = id;
         this.webSite = webSite;
         this.webSiteIcon = webSiteIcon;
@@ -49,11 +49,11 @@ public class BrowseAssBookMarks {
         this.webSite = webSite;
     }
 
-    public String getWebSiteIcon() {
+    public byte[] getWebSiteIcon() {
         return webSiteIcon;
     }
 
-    public void setWebSiteIcon(String webSiteIcon) {
+    public void setWebSiteIcon(byte[] webSiteIcon) {
         this.webSiteIcon = webSiteIcon;
     }
 

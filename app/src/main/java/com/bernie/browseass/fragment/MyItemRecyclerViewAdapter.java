@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.listener.FragmentListener;
+import com.bernie.browseass.utils.HanziToChar;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.historyWebPage = historyWebPageList.get(position);
-        holder.category.setText("A");
+        holder.category.setText(HanziToChar.getSpells(holder.historyWebPage.getWebTitle()));
         holder.webTitle.setText(holder.historyWebPage.getWebTitle());
         holder.webPageSite.setText(holder.historyWebPage.getWebPageSite());
         holder.category.setOnClickListener(new View.OnClickListener() {

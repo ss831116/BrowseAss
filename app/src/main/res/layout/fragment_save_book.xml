@@ -5,9 +5,14 @@
     tools:context="com.bernie.browseass.fragment.SaveBookFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.bernie.browseass.widget.XListView
+        android:id="@+id/xListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:divider="#eaeaea"
+        android:dividerHeight="2dp"
+        android:overScrollMode="never"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"
+        android:scrollbars="none" />
 </FrameLayout>

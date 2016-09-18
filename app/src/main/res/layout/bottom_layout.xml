@@ -71,7 +71,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/refresh"
+            android:src="@drawable/window_button"
             android:scaleType="fitXY" />
     </RelativeLayout>
 </LinearLayout>

@@ -28,7 +28,7 @@ public class BrowseAssDaoGenerator {
         //note.addStringProperty("id").primaryKey().index();
         note.addIdProperty().primaryKey();
         note.addStringProperty("webSite");
-        note.addStringProperty("webSiteIcon");
+        note.addByteArrayProperty("webSiteIcon");
         note.addStringProperty("saveDate");
         note.addStringProperty("title");
     }

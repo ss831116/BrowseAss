@@ -2,7 +2,7 @@ package com.bernie.browseass.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.listener.BookMarksListener;
+import com.bernie.browseass.utils.BitmapHelper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class BookMarksAdapter extends BaseAdapter {
     Activity activity;
     private LayoutInflater mInflater;
     BookMarksListener bookMarksListener;
+
     public BookMarksAdapter(Context context, Activity activity, List<BrowseAssBookMarks> bookMarksBeanList, BookMarksListener bookMarksListener) {
         this.context = context;
         this.activity = activity;
@@ -59,10 +61,10 @@ public class BookMarksAdapter extends BaseAdapter {
         if (null == view) {
             viewHolder = new ViewHolder();
             view = mInflater.inflate(R.layout.book_marks_adapter, viewGroup, false);
-            viewHolder.webSiteIcon =(SimpleDraweeView) view.findViewById(R.id.webSiteIcon);
-            viewHolder.saveTime =(TextView) view.findViewById(R.id.saveTime);
-            viewHolder.webSite =(TextView) view.findViewById(R.id.webSite);
-            viewHolder.title =(TextView) view.findViewById(R.id.title);
+            viewHolder.webSiteIcon = (SimpleDraweeView) view.findViewById(R.id.webSiteIcon);
+            viewHolder.saveTime = (TextView) view.findViewById(R.id.saveTime);
+            viewHolder.webSite = (TextView) view.findViewById(R.id.webSite);
+            viewHolder.title = (TextView) view.findViewById(R.id.title);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -70,18 +72,24 @@ public class BookMarksAdapter extends BaseAdapter {
         viewHolder.saveTime.setText(bookMarks.getSaveDate());
         viewHolder.webSite.setText(bookMarks.getWebSite());
         viewHolder.title.setText(bookMarks.getTitle());
-        Uri uri = Uri.parse(bookMarks.getWebSiteIcon());
-        viewHolder.webSiteIcon.setImageURI(uri);
+        if(bookMarks.getWebSiteIcon() != null) {
+            Bitmap bitmap = BitmapHelper.byteToBitmap(bookMarks.getWebSiteIcon());
+            viewHolder.webSiteIcon.setImageBitmap(bitmap);
+            //bitmap.recycle();
+        }
+        // Uri uri = Uri.parse(bookMarks.getWebSiteIcon());
+        //   viewHolder.webSiteIcon.setImageURI(uri);
         viewHolder.webSiteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("shifuqiang","bookMarks.getWebSite() = " + bookMarks.getWebSite());
+                Log.d("shifuqiang", "bookMarks.getWebSite() = " + bookMarks.getWebSite());
                 bookMarksListener.chooseBookMark(bookMarks.getWebSite());
             }
         });
 
         return view;
     }
+
     class ViewHolder {
         SimpleDraweeView webSiteIcon;
         TextView webSite;

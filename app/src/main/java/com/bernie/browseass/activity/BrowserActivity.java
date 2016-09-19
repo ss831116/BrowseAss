@@ -130,9 +130,9 @@ public class BrowserActivity extends BaseActivity
     }
 
     public void initUserView() {
-        Uri uri = Uri.parse(sharedPreferences.getString("headIcon",""));
+        Uri uri = Uri.parse(sharedPreferences.getString("headIcon", ""));
         userHeadIcon.setImageURI(uri);
-        userName.setText(sharedPreferences.getString("nickname",""));
+        userName.setText(sharedPreferences.getString("nickname", ""));
     }
 
     public void initOnClickListener() {
@@ -242,6 +242,7 @@ public class BrowserActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_camera:
+                startActivity(new Intent(this,WeatherForecastActivity.class));
                 break;
             case R.id.nav_gallery:
                 break;
@@ -384,9 +385,14 @@ public class BrowserActivity extends BaseActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack();
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
             return true;
+        } else {
+            if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+                webView.goBack();
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }

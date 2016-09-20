@@ -38,6 +38,7 @@
     <string name="login">Login</string>
     <string name="login_text">因为种种原因我们只支持QQ登录，求求您了，点击下面登录吧!</string>
     <string name="news">NEWS</string>
-    <string name="exit"></string>
+    <string name="exit">Exit</string>
     <string name="share">Share</string>
+    <string name="del_history">Del History</string>
 </resources>

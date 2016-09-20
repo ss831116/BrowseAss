@@ -282,12 +282,17 @@ public class BrowserActivity extends BaseActivity
         switch (item.getItemId()) {
             case R.id.weatherMenu:
                 startActivity(new Intent(this, WeatherForecastActivity.class));
+                if (drawer.isDrawerOpen(GravityCompat.START))
+                    drawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.newsMenu:
                 break;
             case R.id.nav_slideshow:
                 break;
-            case R.id.nav_manage:
+            case R.id.deleteHistoryMenu:
+                daoSession.getHistoryWebPageDao().deleteAll();
+                if (drawer.isDrawerOpen(GravityCompat.START))
+                    drawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.shareMenu:
                 share();

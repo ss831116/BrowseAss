@@ -8,16 +8,16 @@
             android:title="@string/weather" />
         <item
             android:id="@+id/newsMenu"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/news"
             android:title="@string/news" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Slideshow" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/deleteHistoryMenu"
+            android:icon="@drawable/clear"
+            android:title="@string/del_history" />
     </group>
 
     <item android:title="Communicate">

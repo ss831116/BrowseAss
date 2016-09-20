@@ -104,7 +104,7 @@ public class BrowserActivity extends BaseActivity
         params.putString(QQShare.SHARE_TO_QQ_TITLE, "我的小小浏览器");
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "我自己做的第一个小应用");
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://op.open.qq.com/mobile_appinfov2/detail?appid=1105614121");
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "http://api.open.qq.com/tfs/show_img.php?appid=1105614121&uuid=Screenshot_20160919-171833.png%7C1048576%7C1474278636.792");
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "https://raw.githubusercontent.com/ss831116/BrowseAss/master/app/src/main/res/drawable-hdpi/show_img.png");
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "小小浏览器");
         mTencent.shareToQQ(this, params, new BaseUiListener());
     }

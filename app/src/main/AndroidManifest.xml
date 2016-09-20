@@ -69,7 +69,9 @@
         <activity
             android:name=".activity.BookFragmentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.WeatherForecastActivity"></activity>
+        <activity
+            android:name=".activity.WeatherForecastActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

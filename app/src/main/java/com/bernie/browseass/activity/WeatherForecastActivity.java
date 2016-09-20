@@ -11,15 +11,13 @@ import com.bernie.browseass.R;
 import com.bernie.browseass.listener.WeatherListener;
 import com.bernie.browseass.utils.Weather;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class WeatherForecastActivity extends AppCompatActivity implements AMapLocationListener,WeatherListener {
     TextView weatherText, addressText;
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
-    private static final String WEATHER_TAG = "get_weather";
-
+    private static final String NOW_WEATHER_TAG = "get_weather_now";
+    private static final String Daily_WEATHER_TAG = "get_weather_daily";
+    private static final String Hourly_WEATHER_TAG = "get_weather_hourly";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,15 +35,17 @@ public class WeatherForecastActivity extends AppCompatActivity implements AMapLo
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 addressText.setText(aMapLocation.getCity());
-                Calendar cal = Calendar.getInstance();
-                Date date = cal.getTime();
-                Weather.getWeatherSeveral(aMapLocation.getCity(),3,date,this,"several_tag");
+               // Calendar cal = Calendar.getInstance();
+                //Date date = cal.getTime();
+                Weather.getWeatherNow(aMapLocation.getCity(),this,NOW_WEATHER_TAG);
             }
         }
     }
     @Override
-    public void getWeatherComplete(Object object,String TAG) {
+    public void getWeatherComplete(Object object,String tag) {
+        if(tag.equals(NOW_WEATHER_TAG)){
 
+        }
     }
 
     @Override

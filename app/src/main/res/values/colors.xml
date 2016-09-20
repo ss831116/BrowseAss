@@ -20,4 +20,5 @@
     <color name="color_collect">#A020F0</color>
     <color name="blue">#4876FF</color>
     <color name="red">#FF3E96</color>
+    <color name="loginPage_bg">#B8B8B8</color>
 </resources>

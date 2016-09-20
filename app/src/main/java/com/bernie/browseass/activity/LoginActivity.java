@@ -2,14 +2,21 @@ package com.bernie.browseass.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bernie.browseass.R;
 import com.bernie.browseass.application.BrowserAssApplication;
 import com.bernie.browseass.listener.BaseUiListener;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -22,17 +29,37 @@ import org.json.JSONObject;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements OnClickListener {
-    Button qqLogin;
+    SimpleDraweeView gitImage;
+    TextView qqLogin;
     private Tencent mTencent;
     private final int LOGIN_RESULT = 4;
     private UserInfo mInfo;
+    ImageView backImage;
+    String gitPath = "http://img3.imgtn.bdimg.com/it/u=519728998,1542515417&fm=21&gp=0.jpg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mTencent = BrowserAssApplication.getTencent();
-        qqLogin = (Button) findViewById(R.id.qqLogin);
+        initView();
+    }
+    public void initView(){
+        qqLogin = (TextView) findViewById(R.id.qqLogin);
+        gitImage = (SimpleDraweeView) findViewById(R.id.gitImage);
+        backImage= (ImageView)findViewById(R.id.backImage);
         qqLogin.setOnClickListener(this);
+        backImage.setOnClickListener(this);
+        Uri uri = Uri.parse(gitPath);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+        gitImage.setController(controller);
+        Animatable animatable = gitImage.getController().getAnimatable();
+        if (animatable != null) {
+            animatable.start();
+        }
+        Log.d("shifuqiang",animatable+"");
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_LOGIN ||
@@ -76,6 +103,9 @@ public class LoginActivity extends Activity implements OnClickListener {
         switch (view.getId()) {
             case R.id.qqLogin:
                 mTencent.login(this, "all", loginListener);
+                break;
+            case R.id.backImage:
+                finish();
                 break;
         }
     }

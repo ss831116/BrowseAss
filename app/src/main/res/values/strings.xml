@@ -33,4 +33,11 @@
     <string name="collect_web_page">Collect</string>
     <string name="collect_book">Collect Book</string>
     <string name="history_scan">History Scan</string>
+    <string name="weather">Weather</string>
+    <string name="third_login">Third Login</string>
+    <string name="login">Login</string>
+    <string name="login_text">因为种种原因我们只支持QQ登录，求求您了，点击下面登录吧!</string>
+    <string name="news">NEWS</string>
+    <string name="exit"></string>
+    <string name="share">Share</string>
 </resources>

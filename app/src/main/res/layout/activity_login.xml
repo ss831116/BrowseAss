@@ -1,12 +1,80 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-    <Button
+    android:background="@color/loginPage_bg">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/backImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/back_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/third_login"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize_20" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_scribe"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
+        android:layout_below="@+id/title_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:text="@string/login_text"
+        android:textColor="@color/red"
+        android:textSize="18sp" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/gitImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/text_scribe"
+        android:layout_centerHorizontal="true"
+        fresco:roundedCornerRadius="10dp"
+        fresco:roundWithOverlayColor="@color/loginPage_bg"
+        fresco:roundingBorderWidth="2dp"
+        fresco:roundingBorderColor="@color/red"
+        android:layout_marginTop="40dp" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/gitImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        fresco:placeholderImage="@drawable/qq_login"
+        fresco:roundAsCircle="true"
+        fresco:roundWithOverlayColor="@color/loginPage_bg"
+        fresco:roundingBorderColor="@color/red"
+        fresco:roundingBorderWidth="2dp" />
+    <TextView
         android:id="@+id/qqLogin"
-        android:text="qqLogin"/>
-</LinearLayout>
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/gitImage"
+        android:textColor="@color/red"
+        android:text="@string/login"
+        android:layout_marginTop="40dp"/>
+</RelativeLayout>

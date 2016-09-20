@@ -26,6 +26,9 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:layout_centerVertical="true" />
 
         <TextView
@@ -33,11 +36,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
+            android:textColor="@color/black"
             android:singleLine="true" />
 
         <TextView
             android:id="@+id/saveTime"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
     </LinearLayout>
 </RelativeLayout>

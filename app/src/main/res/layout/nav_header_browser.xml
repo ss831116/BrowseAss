@@ -17,7 +17,7 @@
         fresco:roundWithOverlayColor="@color/white"
         fresco:roundingBorderWidth="2dp"
         fresco:roundingBorderColor="@color/red"
-        fresco:placeholderImage="@drawable/home" />
+        fresco:placeholderImage="@drawable/qq_login" />
 
     <TextView
         android:id="@+id/userName"

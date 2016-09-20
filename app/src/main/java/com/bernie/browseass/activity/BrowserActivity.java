@@ -12,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,10 @@ import com.bernie.browseass.application.BrowserAssApplication;
 import com.bernie.browseass.utils.BitmapHelper;
 import com.bernie.browseass.utils.FileUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -78,6 +83,7 @@ public class BrowserActivity extends BaseActivity
     SimpleDraweeView userHeadIcon;
     DrawerLayout drawer;
     TextView userName;
+    private Tencent mTencent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +94,45 @@ public class BrowserActivity extends BaseActivity
         editor = sharedPreferences.edit();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
+        mTencent = BrowserAssApplication.getTencent();
         initAllView();
+    }
+
+    public void share() {
+        Bundle params = new Bundle();
+        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, "我的小小浏览器");
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "我自己做的第一个小应用");
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://op.open.qq.com/mobile_appinfov2/detail?appid=1105614121");
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "http://api.open.qq.com/tfs/show_img.php?appid=1105614121&uuid=Screenshot_20160919-171833.png%7C1048576%7C1474278636.792");
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "小小浏览器");
+        mTencent.shareToQQ(this, params, new BaseUiListener());
     }
 
     @Override
     public void initView() {
 
+    }
+
+    private class BaseUiListener implements IUiListener {
+
+        protected void doComplete(Object o) {
+        }
+
+        @Override
+        public void onComplete(Object o) {
+            doComplete(o);
+        }
+
+        @Override
+        public void onError(UiError e) {
+            Log.d("shifuqiang", "UiError = " + e);
+        }
+
+        @Override
+        public void onCancel() {
+            Log.d("shifuqiang", "onCancel");
+        }
     }
 
     @Override
@@ -241,18 +280,24 @@ public class BrowserActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_camera:
-                startActivity(new Intent(this,WeatherForecastActivity.class));
+            case R.id.weatherMenu:
+                startActivity(new Intent(this, WeatherForecastActivity.class));
                 break;
-            case R.id.nav_gallery:
+            case R.id.newsMenu:
                 break;
             case R.id.nav_slideshow:
                 break;
             case R.id.nav_manage:
                 break;
-            case R.id.nav_share:
+            case R.id.shareMenu:
+                share();
                 break;
-            case R.id.nav_send:
+            case R.id.exitMenu:
+                userHeadIcon.setImageURI(Uri.parse("http://img0.imgtn.bdimg.com/it/u=3171202911,3857030653&fm=21&gp=0.jpg"));
+                userName.setText("");
+                editor.putString("headIcon", "");
+                editor.putString("nickname", "");
+                editor.commit();
                 break;
             default:
                 break;
@@ -335,6 +380,8 @@ public class BrowserActivity extends BaseActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (null != mTencent)
+            mTencent.onActivityResult(requestCode, resultCode, data);
         if (bottomBar.getVisibility() == View.VISIBLE) {
             bottomBar.setVisibility(View.GONE);
         }
@@ -374,7 +421,6 @@ public class BrowserActivity extends BaseActivity
                 mFilePathCallback = null;
             }
             Uri uri = Uri.parse(data.getStringExtra("headIcon"));
-            //shifuqiang
             editor.putString("headIcon", data.getStringExtra("headIcon"));
             editor.putString("nickname", data.getStringExtra("nickname"));
             editor.commit();

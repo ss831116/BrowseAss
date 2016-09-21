@@ -40,5 +40,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/calendarCenter" />
+    <TextView
+        android:id="@+id/lunarCalendarText"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/calendar"
+        android:textSize="@dimen/textSize_16"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/black"/>
 
 </RelativeLayout>

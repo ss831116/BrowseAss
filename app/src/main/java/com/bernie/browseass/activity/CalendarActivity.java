@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.bernie.browseass.R;
+import com.bernie.browseass.bean.calendar.CalendarBean;
 import com.bernie.browseass.http.HttpRequest;
 import com.bernie.browseass.listener.HttpRequestListener;
 import com.bernie.browseass.utils.RequestKey;
 import com.bernie.browseass.widget.CalendarView;
 import com.bernie.browseass.widget.CalendarView.OnItemClickListener;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +27,7 @@ import java.util.Date;
 public class CalendarActivity extends AppCompatActivity implements HttpRequestListener {
     private CalendarView calendar;
     private ImageButton calendarLeft;
-    private TextView calendarCenter;
+    private TextView calendarCenter, lunarCalendarText;
     private ImageButton calendarRight;
     private SimpleDateFormat format;
     private static final String CALENDAR_TAG = "get_calendar";
@@ -47,6 +47,7 @@ public class CalendarActivity extends AppCompatActivity implements HttpRequestLi
 
         calendarLeft = (ImageButton) findViewById(R.id.calendarLeft);
         calendarCenter = (TextView) findViewById(R.id.calendarCenter);
+        lunarCalendarText = (TextView) findViewById(R.id.lunarCalendarText);
         calendarRight = (ImageButton) findViewById(R.id.calendarRight);
         try {
             //设置日历日期
@@ -87,17 +88,11 @@ public class CalendarActivity extends AppCompatActivity implements HttpRequestLi
             @Override
             public void OnItemClick(Date selectedStartDate,
                                     Date selectedEndDate, Date downDate) {
-                if (calendar.isSelectMore()) {
-                    Toast.makeText(getApplicationContext(), format.format(selectedStartDate) + "到" + format.format(selectedEndDate), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), format.format(downDate), Toast.LENGTH_SHORT).show();
-                }
-                StringBuffer str=new StringBuffer(format.format(downDate));
+                StringBuffer str = new StringBuffer(format.format(downDate));
                 for (int i = 0; i < str.length(); i++) {
                     if (String.valueOf(str.charAt(i)).equals("-")) {
-                        if (String.valueOf(str.charAt(i+1)).equals("0")) {
-                            str = str.replace(i+1,i+2,"");
-                            Log.d("CalendarActivity", "11111"+ ";="+ str);
+                        if (String.valueOf(str.charAt(i + 1)).equals("0")) {
+                            str = str.replace(i + 1, i + 2, "");
                         }
                     }
                 }
@@ -109,7 +104,15 @@ public class CalendarActivity extends AppCompatActivity implements HttpRequestLi
 
     @Override
     public void requestSuccess(JSONObject jsonObject) {
-        Log.d("CalendarActivity", "jsonObject = " + jsonObject.toString());
+
+        CalendarBean calendarBean = new Gson().fromJson(jsonObject.toString(), CalendarBean.class);
+        Log.d("CalendarActivity", "jsonObject = " + calendarBean.getResult().getData().getWeekday());
+        lunarCalendarText.setText(
+                calendarBean.getResult().getData().getDate() + "    " + calendarBean.getResult().getData().getWeekday() + "\n" +
+                        "农历:  " + calendarBean.getResult().getData().getLunarYear() + "    " + calendarBean.getResult().getData().getLunar() + "\n" +
+                        "生肖:  " + calendarBean.getResult().getData().getAnimalsYear() + "\n" +
+                        "回避:  " + calendarBean.getResult().getData().getAvoid() + "\n" +
+                        "适合:  " + calendarBean.getResult().getData().getSuit());
     }
 
     @Override
@@ -117,20 +120,4 @@ public class CalendarActivity extends AppCompatActivity implements HttpRequestLi
 
     }
 
-    public static String getMyDate(String str) {
-        return StringToDate(str, "yyyy-MM-dd", "yyyy/MM/dd");
-    }
-
-    public static String StringToDate(String dateStr, String dateFormatStr, String formatStr) {
-        DateFormat sdf = new SimpleDateFormat(dateFormatStr);
-        Date date = null;
-        try {
-            date = sdf.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        SimpleDateFormat s = new SimpleDateFormat(formatStr);
-
-        return s.format(date);
-    }
 }

@@ -7,4 +7,5 @@ package com.bernie.browseass.utils;
 public class RequestKey {
     public static String NEWS_KEY = "&key=3ccefc900e5ae1afe15d7020953e6d7f";
     public static String WEATHER_KEY ="&key=dc914e9e643ba9fb2ef0628b26cc9e21";
+    public static String CALENDAR_KEY = "&key=faaeac4921f158c0514108bcb2be7bfd";
 }

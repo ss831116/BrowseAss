@@ -56,4 +56,5 @@
     <string name="finance_text">财经</string>
     <string name="fashion_text">时尚</string>
     <string name="delete_bookmark">确定删除这个书签吗？</string>
+    <string name="calendar">Calendar</string>
 </resources>

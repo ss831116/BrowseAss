@@ -75,7 +75,10 @@
         <activity
             android:name=".activity.NewsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.NewsTypeOverviewActivity"
+        <activity
+            android:name=".activity.NewsTypeOverviewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.CalendarActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

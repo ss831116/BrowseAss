@@ -11,9 +11,9 @@
             android:icon="@drawable/news"
             android:title="@string/news" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/calendarMenu"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="@string/calendar" />
         <item
             android:id="@+id/deleteHistoryMenu"
             android:icon="@drawable/clear"

@@ -288,7 +288,8 @@ public class BrowserActivity extends BaseActivity
             case R.id.newsMenu:
                 startActivity(new Intent(this, NewsActivity.class));
                 break;
-            case R.id.nav_slideshow:
+            case R.id.calendarMenu:
+                startActivity(new Intent(this, CalendarActivity.class));
                 break;
             case R.id.deleteHistoryMenu:
                 daoSession.getHistoryWebPageDao().deleteAll();

@@ -14,8 +14,13 @@ import android.view.ViewGroup;
 import com.bernie.browseass.R;
 import com.bernie.browseass.adapter.BookMarksAdapter;
 import com.bernie.browseass.application.BrowserAssApplication;
+import com.bernie.browseass.dialog.DelBookDialog;
 import com.bernie.browseass.listener.BookMarksListener;
+import com.bernie.browseass.listener.DelBookListener;
 import com.bernie.browseass.widget.XListView;
+
+import org.greenrobot.greendao.query.DeleteQuery;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import bernie.greendao.dao.BrowseAssBookMarks;
+import bernie.greendao.dao.BrowseAssBookMarksDao;
 import bernie.greendao.dao.DaoMaster;
 import bernie.greendao.dao.DaoSession;
 
@@ -134,6 +140,22 @@ public class SaveBookFragment extends Fragment  implements XListView.IXListViewL
         getActivity().finish();
     }
 
+    @Override
+    public void fixBookMark(BrowseAssBookMarks bookMarks) {
+        DelBookDialog delBookDialog = new DelBookDialog(getActivity(),R.style.dialog,bookMarks, new DelBookListener() {
+            @Override
+            public void confirm(BrowseAssBookMarks bookMarks) {
+                deleteCityInfo(bookMarks.getId());
+            }
+        });
+        delBookDialog.show();
+    }
+    public void deleteCityInfo(long id) {
+        QueryBuilder<BrowseAssBookMarks> qb = daoSession.getBrowseAssBookMarksDao().queryBuilder();
+        DeleteQuery<BrowseAssBookMarks> bd = qb.where(BrowseAssBookMarksDao.Properties.Id.eq(id)).buildDelete();
+        bd.executeDeleteWithoutDetachingEntities();
+        bookMarksAdapter.fresh(getPhotoGallery());
+    }
     @Override
     public void onRefresh() {
         REFRESH_LOADMORE = "REFRESH";

@@ -1,7 +1,6 @@
 package com.bernie.browseass.fragment;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +36,12 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.category.setText(HanziToChar.getSpells(holder.historyWebPage.getWebTitle()));
         holder.webTitle.setText(holder.historyWebPage.getWebTitle());
         holder.webPageSite.setText(holder.historyWebPage.getWebPageSite());
-        holder.category.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentListener.setResultPageSelect(holder.historyWebPage.getWebPageSite());
             }
         });
-        Log.d("shifuqiang","time = " + holder.historyWebPage.getScanTime());
     }
 
     @Override
@@ -56,9 +54,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView webTitle;
         public final TextView webPageSite;
         public HistoryWebPage historyWebPage;
+        public View view;
 
         public ViewHolder(View view) {
             super(view);
+            this.view = view;
             category = (TextView) view.findViewById(R.id.category);
             webTitle = (TextView) view.findViewById(R.id.webTitle);
             webPageSite = (TextView) view.findViewById(R.id.webPageSite);

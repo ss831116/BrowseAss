@@ -286,6 +286,7 @@ public class BrowserActivity extends BaseActivity
                     drawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.newsMenu:
+                startActivity(new Intent(this, NewsActivity.class));
                 break;
             case R.id.nav_slideshow:
                 break;

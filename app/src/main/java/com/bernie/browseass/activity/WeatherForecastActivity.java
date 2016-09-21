@@ -4,19 +4,26 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.android.volley.VolleyError;
 import com.bernie.browseass.R;
+import com.bernie.browseass.bean.weather.WeatherBean;
+import com.bernie.browseass.http.HttpRequest;
+import com.bernie.browseass.listener.HttpRequestListener;
 import com.bernie.browseass.listener.WeatherListener;
-import com.bernie.browseass.utils.Weather;
+import com.bernie.browseass.utils.RequestKey;
+import com.google.gson.Gson;
 import com.thinkpage.lib.api.TPWeatherNow;
 
-public class WeatherForecastActivity extends AppCompatActivity implements AMapLocationListener, WeatherListener, OnClickListener {
+import org.json.JSONObject;
+
+public class WeatherForecastActivity extends AppCompatActivity implements AMapLocationListener, WeatherListener, OnClickListener,HttpRequestListener {
     TextView weatherText, addressText;
     ImageView backImage;
     //声明AMapLocationClient类对象
@@ -46,7 +53,8 @@ public class WeatherForecastActivity extends AppCompatActivity implements AMapLo
                 addressText.setText(aMapLocation.getCity() + aMapLocation.getDistrict());
                 // Calendar cal = Calendar.getInstance();
                 //Date date = cal.getTime();
-                Weather.getWeatherNow(aMapLocation.getCity(), this, NOW_WEATHER_TAG);
+                //Weather.getWeatherNow(aMapLocation.getCity(), this, NOW_WEATHER_TAG);
+                HttpRequest.httpRequest("http://op.juhe.cn/onebox/weather/query?cityname="+aMapLocation.getCity() + RequestKey.WEATHER_KEY,this,NOW_WEATHER_TAG);
             }
         }
     }
@@ -86,5 +94,17 @@ public class WeatherForecastActivity extends AppCompatActivity implements AMapLo
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void requestSuccess(JSONObject jsonObject) {
+        WeatherBean weatherBean = new Gson().fromJson(jsonObject.toString(), WeatherBean.class);
+        Log.d("NewsActivity","json = " + weatherBean.getReason());
+        Log.d("NewsActivity","json = " + weatherBean.getResult().getData().getRealtime().getCity_name());
+    }
+
+    @Override
+    public void requestFail(VolleyError error) {
+
     }
 }

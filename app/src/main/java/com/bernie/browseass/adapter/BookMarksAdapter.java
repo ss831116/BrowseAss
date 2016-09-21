@@ -3,7 +3,6 @@ package com.bernie.browseass.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,11 @@ import bernie.greendao.dao.BrowseAssBookMarks;
 public class BookMarksAdapter extends BaseAdapter {
     public List<BrowseAssBookMarks> bookMarksBeanList = new ArrayList<>();
     Context context;
-    Activity activity;
     private LayoutInflater mInflater;
     BookMarksListener bookMarksListener;
 
     public BookMarksAdapter(Context context, Activity activity, List<BrowseAssBookMarks> bookMarksBeanList, BookMarksListener bookMarksListener) {
         this.context = context;
-        this.activity = activity;
         this.bookMarksBeanList = bookMarksBeanList;
         this.bookMarksListener = bookMarksListener;
         mInflater = LayoutInflater.from(context);
@@ -75,18 +72,21 @@ public class BookMarksAdapter extends BaseAdapter {
         if(bookMarks.getWebSiteIcon() != null) {
             Bitmap bitmap = BitmapHelper.byteToBitmap(bookMarks.getWebSiteIcon());
             viewHolder.webSiteIcon.setImageBitmap(bitmap);
-            //bitmap.recycle();
         }
-        // Uri uri = Uri.parse(bookMarks.getWebSiteIcon());
-        //   viewHolder.webSiteIcon.setImageURI(uri);
-        viewHolder.webSiteIcon.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("shifuqiang", "bookMarks.getWebSite() = " + bookMarks.getWebSite());
                 bookMarksListener.chooseBookMark(bookMarks.getWebSite());
             }
         });
 
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                bookMarksListener.fixBookMark(bookMarks);
+                return true;
+            }
+        });
         return view;
     }
 
@@ -95,5 +95,9 @@ public class BookMarksAdapter extends BaseAdapter {
         TextView webSite;
         TextView saveTime;
         TextView title;
+    }
+    public void fresh(List<BrowseAssBookMarks> bookMarksBeanList){
+        this.bookMarksBeanList = bookMarksBeanList;
+        notifyDataSetChanged();
     }
 }

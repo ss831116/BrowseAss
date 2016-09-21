@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_layout"
+    android:background="@color/dialog_bg"
+    android:gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/edit_dialog_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_notice_text"
+            android:layout_width="220dp"
+            android:layout_height="124dp"
+            android:gravity="center"
+            android:text="@string/delete_bookmark"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize_18"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/online_button"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/dialog_btn_bg"
+            android:text="是的"
+            android:textColor="@color/edit_btn_text_color"
+            android:textSize="@dimen/textSize_14" />
+
+        <TextView
+            android:id="@+id/cancel_button"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="44dp"
+            android:gravity="center"
+            android:text="不"
+            android:textColor="@color/dialog_cancel_color"
+            android:textSize="@dimen/textSize_14" />
+    </LinearLayout>
+</RelativeLayout>

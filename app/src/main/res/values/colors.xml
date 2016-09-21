@@ -21,4 +21,7 @@
     <color name="blue">#4876FF</color>
     <color name="red">#FF3E96</color>
     <color name="loginPage_bg">#B8B8B8</color>
+    <color name="dialog_bg">#00000000</color>
+    <color name="edit_btn_text_color">#f18142</color>
+    <color name="dialog_cancel_color">#1B9EF1</color>
 </resources>

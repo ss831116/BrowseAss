@@ -10,18 +10,16 @@ import com.bernie.browseass.listener.HttpRequestListener;
 
 import org.json.JSONObject;
 
-import java.util.Map;
-
 /**
  * Created by bernie.shi on 2016/9/19.
  */
 
 public class HttpRequest {
-    public static void httpRequest(String webAddress, Map<Object, Object> params, final HttpRequestListener httpRequestListener, String tag) {
+    public static void httpRequest(String webAddress,final HttpRequestListener httpRequestListener, String tag) {
         BrowserAssApplication.getHttpQueues().cancelAll(tag);
         JsonObjectRequest newMissRequest = new JsonObjectRequest(
-                Request.Method.POST, webAddress,
-                new JSONObject(params), new Response.Listener<JSONObject>() {
+                Request.Method.GET, webAddress,
+                null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonobj) {
                 httpRequestListener.requestSuccess(jsonobj);

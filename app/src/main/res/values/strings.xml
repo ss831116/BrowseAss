@@ -41,4 +41,19 @@
     <string name="exit">Exit</string>
     <string name="share">Share</string>
     <string name="del_history">Del History</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="title_news_list">NewsItem</string>
+    <string name="title_news_detail">News Detail</string>
+    <string name="today_news">今日头条</string>
+    <string name="society_text">社会</string>
+    <string name="domestic_text">国内</string>
+    <string name="international_text">国际</string>
+    <string name="entertainment_text">娱乐</string>
+    <string name="sports_text">体育</string>
+    <string name="military_text">军事</string>
+    <string name="science_text">科技</string>
+    <string name="finance_text">财经</string>
+    <string name="fashion_text">时尚</string>
+    <string name="delete_bookmark">确定删除这个书签吗？</string>
 </resources>

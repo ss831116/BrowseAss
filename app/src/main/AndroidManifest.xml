@@ -71,6 +71,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.WeatherForecastActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.NewsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.NewsTypeOverviewActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

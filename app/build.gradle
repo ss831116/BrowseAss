@@ -54,6 +54,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/mta-sdk-1.6.2.jar')
     compile files('libs/open_sdk_r5756.jar')
+    compile files('libs/AMap3DMap_3.4.0_AMapNavi_1.9.2_AMapSearch_3.4.0_AMapLocation_2.9.0_20160906.jar')
+    compile files('libs/thinkpage_sdk_v_1_0_1.jar')
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
     compile 'com.android.support:support-v4:24.1.1'
@@ -61,9 +63,8 @@ dependencies {
     compile 'org.greenrobot:greendao:3.1.1'
     compile 'org.greenrobot:greendao-generator:3.1.0'
     compile 'com.android.support:recyclerview-v7:24.1.1'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/AMap3DMap_3.4.0_AMapNavi_1.9.2_AMapSearch_3.4.0_AMapLocation_2.9.0_20160906.jar')
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
-    compile files('libs/thinkpage_sdk_v_1_0_1.jar')
     compile 'com.facebook.fresco:animated-gif:0.13.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.google.code.gson:gson:2.7'
 }

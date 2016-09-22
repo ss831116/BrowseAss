@@ -51,10 +51,19 @@ public class Pm25 {
     String dateTime;
     String cityName;
     PM25 pm25;
-    private static class PM25{
+    public static class PM25{
         String curPm;
         String pm25;
 
+        public String getPm10() {
+            return pm10;
+        }
+
+        public void setPm10(String pm10) {
+            this.pm10 = pm10;
+        }
+
+        String pm10;
         public String getDes() {
             return des;
         }

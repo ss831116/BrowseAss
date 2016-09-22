@@ -112,7 +112,7 @@ public class CalendarActivity extends AppCompatActivity implements HttpRequestLi
                         "农历:  " + calendarBean.getResult().getData().getLunarYear() + "    " + calendarBean.getResult().getData().getLunar() + "\n" +
                         "生肖:  " + calendarBean.getResult().getData().getAnimalsYear() + "\n" +
                         "回避:  " + calendarBean.getResult().getData().getAvoid() + "\n" +
-                        "适合:  " + calendarBean.getResult().getData().getSuit());
+                        "适合:  j" + calendarBean.getResult().getData().getSuit());
     }
 
     @Override

@@ -87,7 +87,7 @@ public class RealTime {
     }
 
     Wind wind;
-    private static class Weather{
+    public static class Weather{
         public String getTemperature() {
             return temperature;
         }
@@ -125,7 +125,7 @@ public class RealTime {
         public String info;
         public String img;
     }
-    private static class Wind{
+    public static class Wind{
         public String getDirect() {
             return direct;
         }
